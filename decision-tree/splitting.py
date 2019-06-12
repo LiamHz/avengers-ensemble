@@ -27,5 +27,5 @@ def get_split(dataset):
                 b_index, b_value, b_score, b_groups = index, row[index], gini, groups
     return {'index':b_index, 'value':b_value, 'groups':b_groups}
 
-split = get_split(dataset)
-print('Split: [X%d < %.3f]' % ((split['index']+1), split['value']))
+# split = get_split(dataset)
+# print('Split: [X%d < %.3f]' % ((split['index']+1), split['value']))

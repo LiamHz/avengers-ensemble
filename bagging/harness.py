@@ -1,31 +1,33 @@
-# CART on the Bank Note dataset
-from random import seed
-from random import randrange
 from csv import reader
-from tree import *
 
-dataset = [[2.771244718,1.784783929,0],
-    [1.728571309,1.169761413,0],
-    [3.678319846,2.81281357,0],
-    [3.961043357,2.61995032,0],
-    [2.999208922,2.209014212,0],
-    [7.497545867,3.162953546,1],
-    [9.00220326,3.339047188,1],
-    [7.444542326,0.476683375,1],
-    [10.12493903,3.234550982,1],
-    [6.642287351,3.319983761,1]]
+from bagging import *
 
 # Load a CSV file
 def load_csv(filename):
-	file = open(filename, "rt")
-	lines = reader(file)
-	dataset = list(lines)
+	dataset = list()
+	with open(filename, 'r') as file:
+		csv_reader = reader(file)
+		for row in csv_reader:
+			if not row:
+				continue
+			dataset.append(row)
 	return dataset
 
 # Convert string column to float
 def str_column_to_float(dataset, column):
 	for row in dataset:
 		row[column] = float(row[column].strip())
+
+# Convert string column to integer
+def str_column_to_int(dataset, column):
+	class_values = [row[column] for row in dataset]
+	unique = set(class_values)
+	lookup = dict()
+	for i, value in enumerate(unique):
+		lookup[value] = i
+	for row in dataset:
+		row[column] = lookup[row[column]]
+	return lookup
 
 # Split a dataset into k folds
 def cross_validation_split(dataset, n_folds):
@@ -66,28 +68,3 @@ def evaluate_algorithm(dataset, algorithm, n_folds, *args):
 		accuracy = accuracy_metric(actual, predicted)
 		scores.append(accuracy)
 	return scores
-
-# Classification and Regression Tree Algorithm
-def decision_tree(train, test, max_depth, min_size):
-	tree = build_tree(train, max_depth, min_size)
-	predictions = list()
-	for row in test:
-		prediction = predict(tree, row)
-		predictions.append(prediction)
-	return(predictions)
-
-# Test CART on Bank Note dataset
-seed(1)
-# load and prepare data
-filename = '../data/data_banknote_authentication.csv'
-dataset = load_csv(filename)
-# convert string attributes to integers
-for i in range(len(dataset[0])):
-	str_column_to_float(dataset, i)
-# evaluate algorithm
-n_folds = 5
-max_depth = 5
-min_size = 10
-scores = evaluate_algorithm(dataset, decision_tree, n_folds, max_depth, min_size)
-print('Scores: %s' % scores)
-print('Mean Accuracy: %.3f%%' % (sum(scores)/float(len(scores))))
