@@ -23,7 +23,7 @@ def bagging_predict(trees, row):
     return max(set(predictions), key=predictions.count)
 
 # Bagging Algorithm
-def bagging(train, test, max_depth, min_size, sample_size, n_trees, n_features):
+def random_forest(train, test, max_depth, min_size, sample_size, n_trees, n_features):
     trees = []
     for i in range(n_trees):
         sample = subsample(train, sample_size)

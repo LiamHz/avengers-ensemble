@@ -22,7 +22,7 @@ min_size = 2
 sample_size = 0.50
 n_features = int(sqrt(len(dataset[0])-1))
 for n_trees in [1, 5, 10]:
-	scores = evaluate_algorithm(dataset, bagging, n_folds, max_depth, min_size, sample_size, n_trees, n_features)
+	scores = evaluate_algorithm(dataset, random_forest, n_folds, max_depth, min_size, sample_size, n_trees, n_features)
 	print('Trees: %d' % n_trees)
 	print('Scores: %s' % scores)
 	print('Mean Accuracy: %.3f%%' % (sum(scores)/float(len(scores))))
